@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 // API const is the API url ;-)
@@ -56,6 +57,7 @@ func (f *Facts) getOneFact() {
 func main() {
 	f := Facts{}
 	e := echo.New()
+	e.Use(middleware.Logger())
 	renderer := &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("template.html")),
 	}
