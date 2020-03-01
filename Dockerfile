@@ -12,5 +12,5 @@ RUN cd /go/src/github.com/bzhtux/chuck-norris-facts && go get . && go build -o c
 FROM alpine
 WORKDIR /app
 COPY --from=build-env /go/src/github.com/bzhtux/chuck-norris-facts/cnf /app/
-COPY templates /app/
+COPY templates /app/templates
 ENTRYPOINT ./cnf
