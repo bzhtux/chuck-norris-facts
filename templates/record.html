@@ -68,16 +68,30 @@
             <div class="container">
                 <div class="center">
                     <!-- <div class="fixed"> -->
-                            <hr />
+                            {{ if (eq .Up false) }}
+                                <hr />
+                                <img style="vertical-align:middle" src="https://assets.chucknorris.host/img/avatar/chuck-norris.png">
+                                <span>Redis has gone away !</span>
+                                <p><em>Please try again later</em></p>
+                                <!-- <a class="myButton" href="#" onclick="RefreshForm.submit();" >Retry</a> -->
+                                <!-- <h3>UP: {{ .Up }}</h3> -->
+                            {{ else }}                            
+                                <hr />
+                                <img style="vertical-align:middle" src="https://assets.chucknorris.host/img/avatar/chuck-norris.png">
+                                <span>New record ID: {{ .ID }}</span>
+                            {{ end }}
+                            <!-- <hr />
                             <a href="/"><img style="vertical-align:middle" src="https://assets.chucknorris.host/img/avatar/chuck-norris.png"></a>
                             <span>{{ .Fact }}</span>
                             <hr />
                             <code>
                                 ID: {{ .ID }} <br />
                                 URL: {{ .URL }}
-                            </code>
+                            </code> -->
+                            
                             <hr />
-                            <p><a class="myButton" href="/">Another Fact !</a>&nbsp;&nbsp;</p>
+                            <p><a class="myButton" href="/">Random fact</a>&nbsp;&nbsp;</p>
+                            
                     <!-- </div> -->
                 </div>
             </div>
