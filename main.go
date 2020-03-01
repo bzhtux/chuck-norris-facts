@@ -7,7 +7,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -15,18 +17,60 @@ import (
 // API const is the API url ;-)
 const API = "https://api.chucknorris.io/jokes/random"
 
+var (
+	redisHost = "localhost"
+	redisPort = "6379"
+	redisUp   = false
+)
+
 // Facts struct represent a chuck norris fact ;-)
 type Facts struct {
-	ID      string
-	IconURL string
-	URL     string
-	Value   string
-	Updated string
+	ID    string
+	URL   string
+	Value string
+}
+
+type redisConf struct {
+	Host string
+	Port string
+	URL  string
+	Up   bool
 }
 
 // TemplateRenderer is a custom html/template renderer for Echo framework
 type TemplateRenderer struct {
 	templates *template.Template
+}
+
+func (rc *redisConf) redisPing() {
+	// fmt.Println("redisPing::Redis::URL => " + rc.URL)
+	conn, err := redis.Dial("tcp", rc.URL)
+	if err != nil {
+		rc.Up = false
+	} else {
+		val, err := conn.Do("PING")
+		if err != nil {
+			rc.Up = false
+		}
+		defer conn.Close()
+		if val == "PONG" {
+			rc.Up = true
+		}
+	}
+}
+
+func (rc *redisConf) redisConfig() {
+	rh := os.Getenv("REDIS_HOST")
+	if rh != "" {
+		redisHost = rh
+	}
+	rp := os.Getenv("REDIS_PORT")
+	if rp != "" {
+		redisPort = rp
+	}
+	rc.Host = redisHost
+	rc.Port = redisPort
+	rc.URL = redisHost + ":" + redisPort
 }
 
 // Render func help to render html page
@@ -54,15 +98,34 @@ func (f *Facts) getOneFact() {
 	}
 }
 
+func (rc *redisConf) redisRecord(f Facts) {
+	rc.redisPing()
+	// f := Facts{}
+	if rc.Up {
+		conn, err := redis.Dial("tcp", rc.URL)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		// fmt.Println("redisRecord::ID => ", f.ID)
+		// fmt.Println("redisRecord::Value => ", f.Value)
+		// fmt.Println("redisRecord::URL => ", f.URL)
+		conn.Send("HMSET", f.ID, "fact", f.Value, "url", f.URL)
+		conn.Flush()
+		conn.Receive()
+	}
+}
+
 func main() {
 	f := Facts{}
+	rc := redisConf{}
+	rc.redisConfig()
 	e := echo.New()
 	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("template.html")),
+		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 	e.Renderer = renderer
-	// Named route "foobar"
 	e.GET("/", func(c echo.Context) error {
 		f.getOneFact()
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
@@ -72,5 +135,14 @@ func main() {
 		})
 	}).Name = "home"
 
+	e.POST("/record", func(c echo.Context) error {
+		rc.redisRecord(f)
+		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
+			"Fact": f.Value,
+			"ID":   f.ID,
+			"URL":  f.URL,
+			"Up":   rc.Up,
+		})
+	}).Name = "record"
 	e.Logger.Fatal(e.Start(":9000"))
 }
