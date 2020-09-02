@@ -8,9 +8,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/middleware"
 )
 
@@ -120,12 +122,18 @@ func main() {
 	rc := redisConf{}
 	rc.redisConfig()
 	e := echo.New()
+	e.Debug = false
+	e.HideBanner = true
+	e.Server.ReadTimeout = 3 * time.Second
+	p := prometheus.NewPrometheus("echo", nil)
+	p.Use(e)
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	renderer := &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 	e.Renderer = renderer
+	e.File("/favicon.ico", "templates/favicon.ico")
 	e.GET("/", func(c echo.Context) error {
 		f.getOneFact()
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
@@ -144,5 +152,10 @@ func main() {
 			"Up":   rc.Up,
 		})
 	}).Name = "record"
+	// data, err := json.MarshalIndent(e.Routes(), "", "  ")
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+	// fmt.Println(string(data))
 	e.Logger.Fatal(e.Start(":9000"))
 }

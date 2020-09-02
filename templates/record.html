@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Chuck Norris Facts</title>
+        <link href="https://api.chucknorris.io/img/favicon.ico" rel="icon" type="image/x-icon"/>
     </head>
     <body>
         <style>
@@ -79,6 +80,7 @@
                                 <hr />
                                 <img style="vertical-align:middle" src="https://assets.chucknorris.host/img/avatar/chuck-norris.png">
                                 <span>New record ID: {{ .ID }}</span>
+                                <span>Fact: {{ .Value }}</span>
                             {{ end }}
                             <!-- <hr />
                             <a href="/"><img style="vertical-align:middle" src="https://assets.chucknorris.host/img/avatar/chuck-norris.png"></a>
