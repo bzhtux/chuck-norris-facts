@@ -134,6 +134,9 @@ func main() {
 	}
 	e.Renderer = renderer
 	e.File("/favicon.ico", "templates/favicon.ico")
+	e.GET("/ping", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "Pong")
+	})
 	e.GET("/", func(c echo.Context) error {
 		f.getOneFact()
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
