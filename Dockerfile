@@ -2,7 +2,7 @@
 FROM golang:alpine AS build-env
 LABEL maintainer="Yannick Foeillet <bzhtux@gmail.com>"
 
-RUN apk update && apk --no-cache add build-base git bzr mercurial gcc
+RUN apk --no-cache add build-base git mercurial gcc
 RUN mkdir -p /go/src/github.com/bzhtux/chuck-norris-facts
 ADD . /go/src/github.com/bzhtux/chuck-norris-facts
 RUN cd /go/src/github.com/bzhtux/chuck-norris-facts && go get . && go build -o cnf
