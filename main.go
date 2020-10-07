@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
 )
 
 // API const is the API url ;-)
