@@ -23,6 +23,7 @@ var (
 	redisHost = "localhost"
 	redisPort = "6379"
 	redisUp   = false
+	appPort   = "9000"
 )
 
 // Facts struct represent a chuck norris fact ;-)
@@ -118,6 +119,10 @@ func (rc *redisConf) redisRecord(f Facts) {
 }
 
 func main() {
+	ap := os.Getenv("APP_PORT")
+	if ap != "" {
+		appPort = ap
+	}
 	f := Facts{}
 	rc := redisConf{}
 	rc.redisConfig()
@@ -160,5 +165,5 @@ func main() {
 	// 	log.Fatal(err.Error())
 	// }
 	// fmt.Println(string(data))
-	e.Logger.Fatal(e.Start(":9000"))
+	e.Logger.Fatal(e.Start(":" + appPort))
 }
