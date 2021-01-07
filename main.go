@@ -105,7 +105,7 @@ func (f *Facts) getOneFact() {
 
 func (rc *redisConf) redisRecord(f Facts) {
 	rc.redisPing()
-	f := Facts{}
+	// f = Facts{}
 	if rc.Up {
 		conn, err := redis.Dial("tcp", rc.URL)
 		if err != nil {
@@ -154,6 +154,7 @@ func main() {
 	}).Name = "home"
 
 	e.POST("/record", func(c echo.Context) error {
+		f = Facts{}
 		rc.redisRecord(f)
 		fmt.Println("Fact:" + f.Value)
 		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
