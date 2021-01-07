@@ -100,11 +100,12 @@ func (f *Facts) getOneFact() {
 	if e != nil {
 		log.Fatal(err.Error())
 	}
+
 }
 
 func (rc *redisConf) redisRecord(f Facts) {
 	rc.redisPing()
-	// f := Facts{}
+	f := Facts{}
 	if rc.Up {
 		conn, err := redis.Dial("tcp", rc.URL)
 		if err != nil {
