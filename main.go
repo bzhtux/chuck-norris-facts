@@ -110,9 +110,9 @@ func (rc *redisConf) redisRecord(f Facts) {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		// fmt.Println("redisRecord::ID => ", f.ID)
-		// fmt.Println("redisRecord::Value => ", f.Value)
-		// fmt.Println("redisRecord::URL => ", f.URL)
+		fmt.Println("redisRecord::ID => ", f.ID)
+		fmt.Println("redisRecord::Value => ", f.Value)
+		fmt.Println("redisRecord::URL => ", f.URL)
 		conn.Send("HMSET", f.ID, "fact", f.Value, "url", f.URL)
 		conn.Flush()
 		conn.Receive()
@@ -145,8 +145,6 @@ func main() {
 	})
 	e.GET("/", func(c echo.Context) error {
 		f.getOneFact()
-		fmt.Println(f)
-		fmt.Println(f.Value)
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
 			"Fact": f.Value,
 			"ID":   f.ID,
