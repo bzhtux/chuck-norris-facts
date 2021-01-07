@@ -125,7 +125,7 @@ func main() {
 	if ap != "" {
 		appPort = ap
 	}
-	// f := Facts{}
+	f := Facts{}
 	rc := redisConf{}
 	rc.redisConfig()
 	e := echo.New()
@@ -145,8 +145,10 @@ func main() {
 		return c.JSON(http.StatusOK, "Pong")
 	})
 	e.GET("/", func(c echo.Context) error {
-		f := Facts{}
+		// f := Facts{}
+		fmt.Println("Before getonefact: " + f.ID)
 		f.getOneFact()
+		fmt.Println("After getonefact: " + f.ID)
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
 			"Fact": f.Value,
 			"ID":   f.ID,
