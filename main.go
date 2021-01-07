@@ -145,6 +145,8 @@ func main() {
 	})
 	e.GET("/", func(c echo.Context) error {
 		f.getOneFact()
+		fmt.Println(f)
+		fmt.Println(f.Value)
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
 			"Fact": f.Value,
 			"ID":   f.ID,
