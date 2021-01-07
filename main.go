@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -153,6 +154,7 @@ func main() {
 
 	e.POST("/record", func(c echo.Context) error {
 		rc.redisRecord(f)
+		fmt.Println("Fact:" + f.Value)
 		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
 			"Fact": f.Value,
 			"ID":   f.ID,
