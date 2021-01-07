@@ -145,6 +145,7 @@ func main() {
 		return c.JSON(http.StatusOK, "Pong")
 	})
 	e.GET("/", func(c echo.Context) error {
+		f := Facts{}
 		f.getOneFact()
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
 			"Fact": f.Value,
