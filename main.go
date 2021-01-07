@@ -125,7 +125,7 @@ func main() {
 	if ap != "" {
 		appPort = ap
 	}
-	f := Facts{}
+	// f := Facts{}
 	rc := redisConf{}
 	rc.redisConfig()
 	e := echo.New()
@@ -154,7 +154,7 @@ func main() {
 	}).Name = "home"
 
 	e.POST("/record", func(c echo.Context) error {
-		f = Facts{}
+		f := Facts{}
 		rc.redisRecord(f)
 		fmt.Println("Fact:" + f.Value)
 		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
