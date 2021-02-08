@@ -158,7 +158,7 @@ func main() {
 
 	e.POST("/record", func(c echo.Context) error {
 		//f := Facts{}
-		fmt.Println("Fact:" + f.ID)
+		fmt.Println("FactID:" + f.ID)
 		rc.redisRecord(f)
 		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
 			"Fact": f.Value,
