@@ -11,10 +11,11 @@ import (
 	"os"
 	"time"
 
+	echoPrometheus "github.com/globocom/echo-prometheus"
 	"github.com/gomodule/redigo/redis"
-	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // API const is the API url ;-)
@@ -132,8 +133,9 @@ func main() {
 	e.Debug = false
 	e.HideBanner = true
 	e.Server.ReadTimeout = 3 * time.Second
-	p := prometheus.NewPrometheus("echo", nil)
-	p.Use(e)
+	// p := prometheus.NewPrometheus("echo", nil)
+	// p.Use(e)
+	e.Use(echoPrometheus.MetricsMiddleware())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	renderer := &TemplateRenderer{
@@ -141,6 +143,7 @@ func main() {
 	}
 	e.Renderer = renderer
 	e.File("/favicon.ico", "templates/favicon.ico")
+	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 	e.GET("/ping", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "Pong")
 	})
