@@ -1,6 +1,7 @@
 APP_NAME = "lcc"
 BIN_DIR = "${HOME}/bin"
 TMP_DIR := $(shell mktemp -d)
+CUR_BRANCH := $(shell git branch |grep "^*" | cut -d" " -f2)
 
 .PHONY: all clean remove help
 
@@ -18,10 +19,11 @@ get-help: ## ⚆ Get last git tag
 tag: ## ⚆ Git tag current commit with variable G_TAG=${NEW_TAG} G_MSG=${G_MSG}
 	@echo "TAG: ${G_TAG}"
 	@echo "MSG: ${G_MSG}"
-	#git tag -a ${G_TAG} -m "${G_MSG} "
+	@git tag -a ${G_TAG} -m "${G_MSG}"
 
 push: ## ⚆ Git push with tags
 	@echo "Git push with tags"
+	@git push origin ${CUR_BRANCH} --tags
 
 post-install: install
 	@echo "✨  Cleaning working dir"

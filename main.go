@@ -165,9 +165,9 @@ func main() {
 		url := c.FormValue("url")
 		rc.redisRecord(id, fact, url)
 		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
-			"Fact": f.Value,
-			"ID":   f.ID,
-			"URL":  f.URL,
+			"Fact": fact,
+			"ID":   id,
+			"URL":  url,
 			"Up":   rc.Up,
 		})
 	}).Name = "record"

@@ -18,7 +18,7 @@ script:
 - dgoss run cnf sleep 3
 
 after_success: 
-- curl -X POST -H "Content-Type: application/json" -d "{\"source_type\": \"Tag\", \"source_name\": \"$TRAVIS_TAG\"}" https://hub.docker.com/api/build/v1/source/6375f864-a015-4ec7-808e-0044240f81f7/trigger/f0175241-7846-4651-b66b-ea7280603026/call/
+- 'curl -X POST -H "Content-Type: application/json" -d "{\"source_type\": \"Tag\", \"source_name\": \"$TRAVIS_TAG\"}" https://hub.docker.com/api/build/v1/source/6375f864-a015-4ec7-808e-0044240f81f7/trigger/f0175241-7846-4651-b66b-ea7280603026/call/''
 
 # after_script:
 # - curl -X POST https://hub.docker.com/api/build/v1/source/d5cbd3b0-8269-48d1-85f2-ce14149f7e3f/trigger/c6a596e3-d753-41e2-ae1c-1d6acaa5d16b/call/
