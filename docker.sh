@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+echo "TRAVIS_TEST_RESULT: ${TRAVIS_TEST_RESULT}"
+
 curl -X POST \
     -H "Content-Type: application/json" \
     -d "{\"source_type\": \"Tag\", \"source_name\": \"${TRAVIS_TAG}\"}" \
