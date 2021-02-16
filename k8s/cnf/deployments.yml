@@ -16,35 +16,37 @@ spec:
         app: chuck-norris-facts
       annotations:
         prometheus.io/scrape: "true"
+        prometheus.io/scheme: "http"
         prometheus.io/port: "9000"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
-      - name: chuck-norris-facts
-        image: bzhtux/chuck-norris-facts:0.0.16
-        ports:
-        - containerPort: 9000
-        imagePullPolicy: Always
-        resources:
+        - name: chuck-norris-facts
+          image: bzhtux/chuck-norris-facts:0.0.22
+          ports:
+            - containerPort: 9000
+          imagePullPolicy: Always
+          resources:
             requests:
               memory: "100Mi"
               cpu: "250m"
             limits:
               memory: "200Mi"
               cpu: "500m"
-        env:
-        - name: REDIS_HOST
-          value: redis-service.cnf.svc.cluster.local
-        - name: REDIS_PORT
-          value: "6379"
-        livenessProbe:
-          httpGet:
-            path: /ping
-            port: 9000
-          initialDelaySeconds: 3
-          periodSeconds: 3
-        readinessProbe:
-          httpGet:
-            path: /ping
-            port: 9000
-          initialDelaySeconds: 3
-          periodSeconds: 3      
+          env:
+            - name: REDIS_HOST
+              value: redis-service.cnf.svc.cluster.local
+            - name: REDIS_PORT
+              value: "6379"
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 9000
+            initialDelaySeconds: 3
+            periodSeconds: 3

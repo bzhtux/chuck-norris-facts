@@ -7,7 +7,14 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: chuck.aws2.velero.lan
+  - host: chuck.aws1.bzhtux.lan
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: cnf-service
+          servicePort: 80
+  - host: chuck.aws2.bzhtux.lan
     http:
       paths:
       - path: "/"

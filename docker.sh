@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
-
-echo "TRAVIS_TEST_RESULT: ${TRAVIS_TEST_RESULT}"
+set -euo pipefail
 
 TRIGGER=${TRAVIS_TEST_RESULT:-1}
 DOCKER_TAG=${TRAVIS_TAG:-master}
@@ -15,7 +13,7 @@ case $TRIGGER in
                 ;;
         esac
         ;;
-    1) echo "Build failed, no trigger set for docker hub build"
+    1) echo "Tests failed, no trigger set for docker hub build"
         ;;
 esac
 
