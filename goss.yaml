@@ -1,0 +1,9 @@
+port:
+  tcp:9000:
+    listening: false
+    ip: []
+file:
+  /app/cnf:
+      exists: true
+      filetype: file
+      mode: "0755"
