@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -xeuo pipefail
 
 echo "TRAVIS_TEST_RESULT: ${TRAVIS_TEST_RESULT}"
 
