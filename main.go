@@ -104,18 +104,18 @@ func (f *Facts) getOneFact() {
 
 }
 
-func (rc *redisConf) redisRecord(f Facts) {
+// func (rc *redisConf) redisRecord(f Facts) {
+func (rc *redisConf) redisRecord(id, fact, url string) {
 	rc.redisPing()
-	// f = Facts{}
 	if rc.Up {
 		conn, err := redis.Dial("tcp", rc.URL)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		fmt.Println("redisRecord::ID => ", f.ID)
-		fmt.Println("redisRecord::Value => ", f.Value)
-		fmt.Println("redisRecord::URL => ", f.URL)
-		conn.Send("HMSET", f.ID, "fact", f.Value, "url", f.URL)
+		fmt.Println("redisRecord::ID => ", id)
+		fmt.Println("redisRecord::Value => ", fact)
+		fmt.Println("redisRecord::URL => ", url)
+		conn.Send("HMSET", id, "fact", fact, "url", url)
 		conn.Flush()
 		conn.Receive()
 	}
@@ -148,10 +148,9 @@ func main() {
 		return c.JSON(http.StatusOK, "Pong")
 	})
 	e.GET("/", func(c echo.Context) error {
-		// f := Facts{}
-		fmt.Println("Before getonefact: " + f.ID)
+		// fmt.Println("Before getonefact: " + f.ID)
 		f.getOneFact()
-		fmt.Println("After getonefact: " + f.ID)
+		// fmt.Println("After getonefact: " + f.ID)
 		return c.Render(http.StatusOK, "template.html", map[string]interface{}{
 			"Fact": f.Value,
 			"ID":   f.ID,
@@ -160,9 +159,11 @@ func main() {
 	}).Name = "home"
 
 	e.POST("/record", func(c echo.Context) error {
-		//f := Facts{}
-		fmt.Println("FactID:" + f.ID)
-		rc.redisRecord(f)
+		// fmt.Println("FactID:" + f.ID)
+		id := c.FormValue("id")
+		fact := c.FormValue("fact")
+		url := c.FormValue("url")
+		rc.redisRecord(id, fact, url)
 		return c.Render(http.StatusOK, "record.html", map[string]interface{}{
 			"Fact": f.Value,
 			"ID":   f.ID,
