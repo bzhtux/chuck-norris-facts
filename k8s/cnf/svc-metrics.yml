@@ -8,7 +8,6 @@ metadata:
     prometheus.io/scheme: 'http'
     prometheus.io/path: '/metrics'
 spec:
-  clusterIP: ""
   ports:
   - name: metrics
     port: 9121
